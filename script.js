@@ -27,7 +27,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // noteのRSSフィードを取得して表示
     const noteFeedElement = document.getElementById('noteFeed');
-    const noteUsername = 'yusukesakai_biz';
+    const noteUsername = 'yusukesakai_tech';
     const corsProxy = 'https://api.allorigins.win/raw?url=';
     const noteRssUrl = `https://note.com/${noteUsername}/rss`;
 
@@ -37,46 +37,37 @@ document.addEventListener('DOMContentLoaded', function() {
     async function fetchNoteFeed() {
         try {
             const response = await fetch(corsProxy + encodeURIComponent(noteRssUrl));
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
             const data = await response.text();
             const parser = new DOMParser();
             const xml = parser.parseFromString(data, 'application/xml');
             const items = xml.querySelectorAll('item');
-            
+        
             // ローディング表示を削除
             noteFeedElement.innerHTML = '';
-            
-            let itArticleCount = 0;
-            items.forEach(item => {
+        
+            // 最新の3件を表示
+            Array.from(items).slice(0, 3).forEach(item => {
                 const title = item.querySelector('title').textContent;
                 const link = item.querySelector('link').textContent;
                 const pubDate = new Date(item.querySelector('pubDate').textContent);
-                
-                // IT関連の記事かどうかをチェック
-                const isItRelated = itKeywords.some(keyword => 
-                    title.toLowerCase().includes(keyword.toLowerCase())
-                );
-                
-                if (isItRelated && itArticleCount < 3) {
-                    const articleElement = createArticleElement(title, link, pubDate);
-                    noteFeedElement.appendChild(articleElement);
-                    itArticleCount++;
-                }
+            
+                const articleElement = createArticleElement(title, link, pubDate);
+                noteFeedElement.appendChild(articleElement);
             });
 
-            // IT関連の記事が3つない場合は最新の記事で補完
-            if (itArticleCount < 3) {
-                items.forEach(item => {
-                    if (itArticleCount >= 3) return;
-                    
-                    const title = item.querySelector('title').textContent;
-                    const link = item.querySelector('link').textContent;
-                    const pubDate = new Date(item.querySelector('pubDate').textContent);
-                    
-                    const articleElement = createArticleElement(title, link, pubDate);
-                    noteFeedElement.appendChild(articleElement);
-                    itArticleCount++;
-                });
+            // 記事が1つも取得できなかった場合
+            if (items.length === 0) {
+                noteFeedElement.innerHTML = `
+                    <div class="no-articles">
+                        <p>記事が見つかりませんでした。</p>
+                        <a href="https://note.com/${noteUsername}" target="_blank">noteで全ての記事を見る</a>
+                    </div>
+            `    ;
             }
+
         } catch (error) {
             console.error('Failed to fetch note feed:', error);
             noteFeedElement.innerHTML = `
