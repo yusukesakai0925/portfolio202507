@@ -27,7 +27,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // noteのRSSフィードを取得して表示
     const noteFeedElement = document.getElementById('noteFeed');
-    const noteUsername = 'yusukesakai_biz';
+    const noteUsername = 'yusukesakai0925';
     const corsProxy = 'https://api.allorigins.win/raw?url=';
     const noteRssUrl = `https://note.com/${noteUsername}/rss`;
 
