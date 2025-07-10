@@ -48,8 +48,8 @@ document.addEventListener('DOMContentLoaded', function() {
             // ローディング表示を削除
             noteFeedElement.innerHTML = '';
         
-            // 最新の3件を表示
-            Array.from(items).slice(0, 3).forEach(item => {
+            // 最新の10件を表示
+            Array.from(items).slice(0, 10).forEach(item => {
                 const title = item.querySelector('title').textContent;
                 const link = item.querySelector('link').textContent;
                 const pubDate = new Date(item.querySelector('pubDate').textContent);
