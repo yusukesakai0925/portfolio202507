@@ -363,7 +363,7 @@ body {
 
 .contact-note {
     margin-top: 15px;
-    color: var(--gray);
+    color: var(--text-color);
     font-size: 0.9em;
 }
 
@@ -375,7 +375,7 @@ footer {
 }
 
 .footer-note {
-    color: var(--gray);
+    color: var(--text-color);
     margin-bottom: 10px;
     font-size: 0.9em;
 }
